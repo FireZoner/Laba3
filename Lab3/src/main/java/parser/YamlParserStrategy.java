@@ -26,8 +26,8 @@ public class YamlParserStrategy implements ParserStrategy {
     
     @Override
     public boolean supports(File file) {
-        return file.getName().toLowerCase().endsWith(".yaml") ||
-               file.getName().toLowerCase().endsWith(".yml");
+        String name = file.getName().toLowerCase();
+        return name.endsWith(".yaml") || name.endsWith(".yml");
     }
     
     @Override

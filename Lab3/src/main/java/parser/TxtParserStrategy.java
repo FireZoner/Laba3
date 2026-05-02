@@ -21,9 +21,6 @@ public class TxtParserStrategy implements ParserStrategy {
     
     @Override
     public boolean supports(File file) {
-        String name = file.getName().toLowerCase();
-        if (!name.endsWith(".txt")) return false;
-        
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {

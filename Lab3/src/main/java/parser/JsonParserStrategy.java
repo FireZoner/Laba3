@@ -25,7 +25,15 @@ public class JsonParserStrategy implements ParserStrategy {
     
     @Override
     public boolean supports(File file) {
-        return file.getName().toLowerCase().endsWith(".json");
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String firstLine = reader.readLine();
+            if (firstLine == null) return false;
+            firstLine = firstLine.trim();
+            
+            return firstLine.startsWith("{");
+        } catch (IOException e) {
+            return false;
+        }
     }
     
     @Override

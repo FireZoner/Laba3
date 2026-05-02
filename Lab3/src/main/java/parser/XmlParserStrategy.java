@@ -25,12 +25,12 @@ public class XmlParserStrategy implements ParserStrategy {
     
     @Override
     public boolean supports(File file) {
-        String name = file.getName().toLowerCase();
-        if (!name.endsWith(".xml")) return false;
-        
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String firstLine = reader.readLine();
-            return firstLine != null && firstLine.contains("<mission");
+            if (firstLine == null) return false;
+            firstLine = firstLine.trim();
+            
+            return firstLine.startsWith("<?xml") || firstLine.startsWith("<");
         } catch (IOException e) {
             return false;
         }
