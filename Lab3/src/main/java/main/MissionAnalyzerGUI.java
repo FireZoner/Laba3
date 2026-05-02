@@ -23,6 +23,8 @@ public class MissionAnalyzerGUI extends JFrame {
     private JLabel statusLabel;
     private ParserDispatcher dispatcher;
     
+    private static File lastDirectory = null;
+    
     public MissionAnalyzerGUI() {
         initDispatcher();
         initUI();
@@ -81,6 +83,11 @@ public class MissionAnalyzerGUI extends JFrame {
     
     private void openFile() {
         JFileChooser fileChooser = new JFileChooser();
+        
+        if (lastDirectory != null && lastDirectory.exists()) {
+            fileChooser.setCurrentDirectory(lastDirectory);
+        }
+        
         fileChooser.setFileFilter(new FileFilter() {
             @Override
             public boolean accept(File f) {
@@ -99,6 +106,7 @@ public class MissionAnalyzerGUI extends JFrame {
         
         if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
+            lastDirectory = file.getParentFile();
             loadMission(file);
         }
     }
