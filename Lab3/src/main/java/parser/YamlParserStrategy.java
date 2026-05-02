@@ -5,9 +5,12 @@
 
 package parser;
 
+import entities.enums.ThreatLevel;
+import entities.enums.Outcome;
+import entities.enums.Rank;
+import entities.enums.TechniqueType;
 import model.*;
 import builders.MissionBuilder;
-import model.enums.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;

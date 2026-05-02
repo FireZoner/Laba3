@@ -4,8 +4,8 @@
  */
 package model;
 
+import entities.enums.TimelineEventType;
 import java.time.LocalDateTime;
-import model.enums.*;
 
 /**
  *

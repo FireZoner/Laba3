@@ -4,7 +4,9 @@
  */
 package model;
 
-import model.enums.*;
+import entities.enums.Mobility;
+import entities.enums.BehaviorType;
+import entities.enums.EscalationRisk;
 import java.util.*;
 
 /**

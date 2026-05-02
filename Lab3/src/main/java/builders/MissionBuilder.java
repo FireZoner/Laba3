@@ -5,8 +5,11 @@
 
 package builders;
 
+import entities.enums.ThreatLevel;
+import entities.enums.Outcome;
+import entities.enums.Rank;
+import entities.enums.TechniqueType;
 import model.*;
-import model.enums.*;
 
 /**
  * Builder для создания Mission (Builder Pattern)

@@ -4,7 +4,9 @@
  */
 package model;
 
-import model.enums.*;
+import entities.enums.Visibility;
+import entities.enums.Weather;
+import entities.enums.TimeOfDay;
 
 /**
  *

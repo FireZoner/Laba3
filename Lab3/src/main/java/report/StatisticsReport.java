@@ -3,8 +3,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package report;
+import entities.enums.Rank;
+import entities.enums.TechniqueType;
 import model.*;
-import model.enums.*;
 import java.util.*;
 import java.util.stream.Collectors;
 

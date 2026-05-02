@@ -4,9 +4,19 @@
  */
 package parser;
 
+import entities.enums.Visibility;
+import entities.enums.PublicExposureRisk;
+import entities.enums.Weather;
+import entities.enums.Mobility;
+import entities.enums.ThreatLevel;
+import entities.enums.BehaviorType;
+import entities.enums.EscalationRisk;
+import entities.enums.TimeOfDay;
+import entities.enums.Outcome;
+import entities.enums.Rank;
+import entities.enums.TechniqueType;
 import model.*;
 import builders.MissionBuilder;
-import model.enums.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import java.io.*;

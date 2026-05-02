@@ -4,7 +4,7 @@
  */
 package model;
 
-import model.enums.*;
+import entities.enums.ThreatLevel;
 
 /**
  *

@@ -4,9 +4,15 @@
  */
 package parser;
 
+import entities.enums.Visibility;
+import entities.enums.Weather;
+import entities.enums.ThreatLevel;
+import entities.enums.TimeOfDay;
+import entities.enums.Outcome;
+import entities.enums.Rank;
+import entities.enums.TechniqueType;
 import model.*;
 import builders.MissionBuilder;
-import model.enums.*;
 import java.io.*;
 
 /**
