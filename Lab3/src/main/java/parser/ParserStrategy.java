@@ -5,7 +5,7 @@
 
 package parser;
 
-import model.*;
+import entities.*;
 import builders.MissionBuilder;
 import java.io.*;
 
@@ -14,5 +14,5 @@ import java.io.*;
  */
 public interface ParserStrategy {
     boolean supports(File file);
-    Mission parse(File file, MissionBuilder builder) throws IOException;
+    MissionEntity parse(File file, MissionBuilder builder) throws IOException;
 }

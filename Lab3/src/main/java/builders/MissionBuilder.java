@@ -9,17 +9,17 @@ import entities.enums.ThreatLevel;
 import entities.enums.Outcome;
 import entities.enums.Rank;
 import entities.enums.TechniqueType;
-import model.*;
+import entities.*;
 
 /**
  * Builder для создания Mission (Builder Pattern)
  * @author zubbo
  */
 public class MissionBuilder {
-    private final Mission mission;
+    private final MissionEntity mission;
     
     public MissionBuilder() {
-        this.mission = new Mission();
+        this.mission = new MissionEntity();
     }
     
     public MissionBuilder setMissionId(String id) {
@@ -52,59 +52,58 @@ public class MissionBuilder {
         return this;
     }
     
-    public MissionBuilder setCurse(Curse curse) {
+    public MissionBuilder setCurse(CurseEntity curse) {
         mission.setCurse(curse);
         return this;
     }
     
     public MissionBuilder setCurse(String name, ThreatLevel level) {
-        mission.setCurse(new Curse(name, level));
+        mission.setCurse(new CurseEntity(name, level));
         return this;
     }
     
-    public MissionBuilder addSorcerer(Sorcerer sorcerer) {
+    public MissionBuilder addSorcerer(SorcererEntity sorcerer) {
         mission.addSorcerer(sorcerer);
         return this;
     }
     
     public MissionBuilder addSorcerer(String name, Rank rank) {
-        mission.addSorcerer(new Sorcerer(name, rank));
+        mission.addSorcerer(new SorcererEntity(name, rank));
         return this;
     }
     
-    public MissionBuilder addTechnique(Technique technique) {
+    public MissionBuilder addTechnique(TechniqueEntity technique) {
         mission.addTechnique(technique);
         return this;
     }
     
     public MissionBuilder addTechnique(String name, TechniqueType type, String ownerName, long damage) {
-        Sorcerer owner = findSorcererByName(ownerName);
-        Technique technique = new Technique(name, type, owner, damage);
+        TechniqueEntity technique = new TechniqueEntity(name, type, damage);
         mission.addTechnique(technique);
         return this;
     }
     
-    public MissionBuilder setEconomicAssessment(EconomicAssessment assessment) {
+    public MissionBuilder setEconomicAssessment(EconomicAssessmentEntity assessment) {
         mission.setEconomicAssessment(assessment);
         return this;
     }
     
-    public MissionBuilder setEnemyActivity(EnemyActivity activity) {
+    public MissionBuilder setEnemyActivity(EnemyActivityEntity activity) {
         mission.setEnemyActivity(activity);
         return this;
     }
     
-    public MissionBuilder setEnvironmentConditions(EnvironmentConditions conditions) {
+    public MissionBuilder setEnvironmentConditions(EnvironmentConditionsEntity conditions) {
         mission.setEnvironmentConditions(conditions);
         return this;
     }
     
-    public MissionBuilder setCivilianImpact(CivilianImpact impact) {
+    public MissionBuilder setCivilianImpact(CivilianImpactEntity impact) {
         mission.setCivilianImpact(impact);
         return this;
     }
     
-    public MissionBuilder addTimelineEvent(OperationTimeline event) {
+    public MissionBuilder addTimelineEvent(OperationTimelineEntity event) {
         mission.addTimelineEvent(event);
         return this;
     }
@@ -139,25 +138,14 @@ public class MissionBuilder {
         return this;
     }
     
-    private Sorcerer findSorcererByName(String name) {
-        return mission.getSorcerers().stream()
-            .filter(s -> s.getName() != null && s.getName().equals(name))
-            .findFirst()
-            .orElse(null);
-    }
-    
-    public Mission build() {
-        for (Technique t : mission.getTechniques()) {
-            if (t.getOwner() == null && t.getOwnerName() != null) {
-                Sorcerer owner = findSorcererByName(t.getOwnerName());
-                if (owner != null) {
-                    t.setOwner(owner);
-                } else {
-                    Sorcerer unknown = new Sorcerer(t.getOwnerName(), null);
-                    mission.addSorcerer(unknown);
-                    t.setOwner(unknown);
-                    System.out.println("[WARNING] Created placeholder sorcerer: '" + 
-                        t.getOwnerName() + "' for technique '" + t.getName() + "'");
+    public MissionEntity build() {
+        for (TechniqueEntity technique : mission.getTechniques()) {
+            if (technique.getOwnerName() != null && !technique.getOwnerName().isEmpty()) {
+                for (SorcererEntity sorcerer : mission.getSorcerers()) {
+                    if (sorcerer.getName().equals(technique.getOwnerName())) {
+                        technique.setOwner(sorcerer);
+                        break;
+                    }
                 }
             }
         }

@@ -4,7 +4,7 @@
  */
 package parser;
 
-import model.*;
+import entities.*;
 import builders.MissionBuilder;
 import java.io.*;
 import java.util.*;
@@ -27,7 +27,7 @@ public class ParserDispatcher {
         this.strategies.addAll(strategies);
     }
     
-    public Mission parse(File file) throws IOException {
+    public MissionEntity parse(File file) throws IOException {
         ParserStrategy selectedStrategy = strategies.stream()
             .filter(s -> s.supports(file))
             .findFirst()
@@ -39,8 +39,8 @@ public class ParserDispatcher {
         return selectedStrategy.parse(file, builder);
     }
     
-    public List<Mission> parseBatch(List<File> files) throws IOException {
-        List<Mission> missions = new ArrayList<>();
+    public List<MissionEntity> parseBatch(List<File> files) throws IOException {
+        List<MissionEntity> missions = new ArrayList<>();
         for (File file : files) {
             try {
                 missions.add(parse(file));

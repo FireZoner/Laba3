@@ -52,4 +52,8 @@ public class EnemyActivityEntity {
     
     public List<String> getAttackPatterns() { return attackPatterns; }
     public void setAttackPatterns(List<String> attackPatterns) { this.attackPatterns = attackPatterns; }
+    
+    public void addAttackPattern(String attackPattern) {
+        this.attackPatterns.add(attackPattern);
+    }
 }

@@ -30,6 +30,9 @@ public class TechniqueEntity {
     private TechniqueType type;
 
     private long damage;
+    
+    @Transient
+    private String ownerName;
 
     @ManyToOne
     @JoinColumn(name = "owner_id")
@@ -58,6 +61,9 @@ public class TechniqueEntity {
     
     public long getDamage() { return damage; }
     public void setDamage(long damage) { this.damage = damage; }
+    
+    public String getOwnerName() { return ownerName; }
+    public void setOwnerName(String ownerName) { this.ownerName = ownerName; }
     
     public SorcererEntity getOwner() { return owner; }
     public void setOwner(SorcererEntity owner) { this.owner = owner; }

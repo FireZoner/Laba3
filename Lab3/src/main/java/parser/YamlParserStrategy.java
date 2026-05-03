@@ -5,11 +5,8 @@
 
 package parser;
 
-import entities.enums.ThreatLevel;
-import entities.enums.Outcome;
-import entities.enums.Rank;
-import entities.enums.TechniqueType;
-import model.*;
+import entities.enums.*;
+import entities.*;
 import builders.MissionBuilder;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,7 +31,7 @@ public class YamlParserStrategy implements ParserStrategy {
     }
     
     @Override
-    public Mission parse(File file, MissionBuilder builder) throws IOException {
+    public MissionEntity parse(File file, MissionBuilder builder) throws IOException {
         JsonNode root = mapper.readTree(file);
         
         builder.setMissionId(getString(root, "missionId"))
@@ -79,7 +76,7 @@ public class YamlParserStrategy implements ParserStrategy {
         
         if (root.has("economicAssessment") && root.get("economicAssessment") != null) {
             JsonNode ea = root.get("economicAssessment");
-            EconomicAssessment assessment = new EconomicAssessment();
+            EconomicAssessmentEntity assessment = new EconomicAssessmentEntity();
             assessment.setTotalDamageCost(getLong(ea, "totalDamageCost"));
             assessment.setInfrastructureDamage(getLong(ea, "infrastructureDamage"));
             assessment.setCommercialDamage(getLong(ea, "commercialDamage"));

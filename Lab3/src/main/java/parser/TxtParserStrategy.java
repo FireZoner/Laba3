@@ -4,14 +4,8 @@
  */
 package parser;
 
-import entities.enums.Visibility;
-import entities.enums.Weather;
-import entities.enums.ThreatLevel;
-import entities.enums.TimeOfDay;
-import entities.enums.Outcome;
-import entities.enums.Rank;
-import entities.enums.TechniqueType;
-import model.*;
+import entities.enums.*;
+import entities.*;
 import builders.MissionBuilder;
 import java.io.*;
 
@@ -22,8 +16,8 @@ import java.io.*;
  */
 public class TxtParserStrategy implements ParserStrategy {
     
-    private Sorcerer currentSorcerer = null;
-    private Technique currentTechnique = null;
+    private SorcererEntity currentSorcerer = null;
+    private TechniqueEntity currentTechnique = null;
     
     @Override
     public boolean supports(File file) {
@@ -42,7 +36,7 @@ public class TxtParserStrategy implements ParserStrategy {
     }
     
     @Override
-    public Mission parse(File file, MissionBuilder builder) throws IOException {
+    public MissionEntity parse(File file, MissionBuilder builder) throws IOException {
         currentSorcerer = null;
         currentTechnique = null;
         
@@ -140,7 +134,7 @@ public class TxtParserStrategy implements ParserStrategy {
     
     private void processSorcererField(String key, String value, MissionBuilder builder) {
         if (currentSorcerer == null) {
-            currentSorcerer = new Sorcerer();
+            currentSorcerer = new SorcererEntity();
         }
         
         switch (key) {
@@ -157,7 +151,7 @@ public class TxtParserStrategy implements ParserStrategy {
     
     private void processTechniqueField(String key, String value, MissionBuilder builder) {
         if (currentTechnique == null) {
-            currentTechnique = new Technique();
+            currentTechnique = new TechniqueEntity();
         }
         
         switch (key) {
@@ -177,9 +171,9 @@ public class TxtParserStrategy implements ParserStrategy {
     }
     
     private void processEnvironmentField(String key, String value, MissionBuilder builder) {
-        EnvironmentConditions conditions = builder.build().getEnvironmentConditions();
+        EnvironmentConditionsEntity conditions = builder.build().getEnvironmentConditions();
         if (conditions == null) {
-            conditions = new EnvironmentConditions();
+            conditions = new EnvironmentConditionsEntity();
         }
         
         switch (key) {

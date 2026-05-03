@@ -5,18 +5,8 @@
 
 package parser;
 
-import entities.enums.Visibility;
-import entities.enums.PublicExposureRisk;
-import entities.enums.Weather;
-import entities.enums.Mobility;
-import entities.enums.ThreatLevel;
-import entities.enums.BehaviorType;
-import entities.enums.EscalationRisk;
-import entities.enums.TimeOfDay;
-import entities.enums.Outcome;
-import entities.enums.Rank;
-import entities.enums.TechniqueType;
-import model.*;
+import entities.enums.*;
+import entities.*;
 import builders.MissionBuilder;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -47,7 +37,7 @@ public class JsonParserStrategy implements ParserStrategy {
     }
     
     @Override
-    public Mission parse(File file, MissionBuilder builder) throws IOException {
+    public MissionEntity parse(File file, MissionBuilder builder) throws IOException {
         JsonNode root = mapper.readTree(file);
         
         builder.setMissionId(getString(root, "missionId"))
@@ -100,7 +90,7 @@ public class JsonParserStrategy implements ParserStrategy {
         
         if (root.has("economicAssessment") && root.get("economicAssessment") != null) {
             JsonNode ea = root.get("economicAssessment");
-            EconomicAssessment assessment = new EconomicAssessment();
+            EconomicAssessmentEntity assessment = new EconomicAssessmentEntity();
             assessment.setTotalDamageCost(getLong(ea, "totalDamageCost"));
             assessment.setInfrastructureDamage(getLong(ea, "infrastructureDamage"));
             assessment.setCommercialDamage(getLong(ea, "commercialDamage"));
@@ -112,7 +102,7 @@ public class JsonParserStrategy implements ParserStrategy {
 
         if (root.has("enemyActivity") && root.get("enemyActivity") != null) {
             JsonNode ea = root.get("enemyActivity");
-            EnemyActivity activity = new EnemyActivity();
+            EnemyActivityEntity activity = new EnemyActivityEntity();
             activity.setBehaviorType(BehaviorType.parse(getString(ea, "behaviorType")));
             activity.setTargetPriority(getString(ea, "targetPriority"));
             activity.setMobility(Mobility.parse(getString(ea, "mobility")));
@@ -128,7 +118,7 @@ public class JsonParserStrategy implements ParserStrategy {
         
         if (root.has("environmentConditions") && root.get("environmentConditions") != null) {
             JsonNode ec = root.get("environmentConditions");
-            EnvironmentConditions conditions = new EnvironmentConditions();
+            EnvironmentConditionsEntity conditions = new EnvironmentConditionsEntity();
             conditions.setWeather(Weather.parse(getString(ec, "weather")));
             conditions.setTimeOfDay(TimeOfDay.parse(getString(ec, "timeOfDay")));
             conditions.setVisibility(Visibility.parse(getString(ec, "visibility")));
@@ -138,7 +128,7 @@ public class JsonParserStrategy implements ParserStrategy {
         
         if (root.has("civilianImpact") && root.get("civilianImpact") != null) {
             JsonNode ci = root.get("civilianImpact");
-            CivilianImpact impact = new CivilianImpact();
+            CivilianImpactEntity impact = new CivilianImpactEntity();
             impact.setEvacuated(getInt(ci, "evacuated"));
             impact.setInjured(getInt(ci, "injured"));
             impact.setMissing(getInt(ci, "missing"));

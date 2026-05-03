@@ -5,11 +5,8 @@
 
 package parser;
 
-import entities.enums.ThreatLevel;
-import entities.enums.Outcome;
-import entities.enums.Rank;
-import entities.enums.TechniqueType;
-import model.*;
+import entities.enums.*;
+import entities.*;
 import builders.MissionBuilder;
 import java.io.*;
 import java.util.*;
@@ -44,9 +41,9 @@ public class LegacyTxtParserStrategy implements ParserStrategy {
     }
     
     @Override
-    public Mission parse(File file, MissionBuilder builder) throws IOException {
-        Map<Integer, Sorcerer> sorcererMap = new HashMap<>();
-        Map<Integer, Technique> techniqueMap = new HashMap<>();
+    public MissionEntity parse(File file, MissionBuilder builder) throws IOException {
+        Map<Integer, SorcererEntity> sorcererMap = new HashMap<>();
+        Map<Integer, TechniqueEntity> techniqueMap = new HashMap<>();
         
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
@@ -68,13 +65,13 @@ public class LegacyTxtParserStrategy implements ParserStrategy {
             }
         }
         
-        for (Sorcerer s : sorcererMap.values()) {
+        for (SorcererEntity s : sorcererMap.values()) {
             if (s.getName() != null && !s.getName().isEmpty()) {
                 builder.addSorcerer(s);
             }
         }
         
-        for (Technique t : techniqueMap.values()) {
+        for (TechniqueEntity t : techniqueMap.values()) {
             if (t.getName() != null && !t.getName().isEmpty()) {
                 builder.addTechnique(t);
             }
@@ -84,8 +81,8 @@ public class LegacyTxtParserStrategy implements ParserStrategy {
     }
     
     private void processKey(String key, String value, MissionBuilder builder,
-                           Map<Integer, Sorcerer> sorcererMap,
-                           Map<Integer, Technique> techniqueMap) {
+                           Map<Integer, SorcererEntity> sorcererMap,
+                           Map<Integer, TechniqueEntity> techniqueMap) {
         
         switch (key) {
             case "missionId" -> {
@@ -137,7 +134,7 @@ public class LegacyTxtParserStrategy implements ParserStrategy {
         String curseName = null;
         ThreatLevel threatLevel = null;
         
-        Mission tempMission = builder.build();
+        MissionEntity tempMission = builder.build();
         if (tempMission.getCurse() != null) {
             curseName = tempMission.getCurse().getName();
             threatLevel = tempMission.getCurse().getThreatLevel();
@@ -150,13 +147,13 @@ public class LegacyTxtParserStrategy implements ParserStrategy {
         builder.setCurse(curseName, threatLevel);
     }
     
-    private void processSorcererKey(String key, String value, Map<Integer, Sorcerer> sorcererMap) {
+    private void processSorcererKey(String key, String value, Map<Integer, SorcererEntity> sorcererMap) {
         int index = extractIndex(key);
         if (index == -1) return;
         
-        Sorcerer sorcerer = sorcererMap.get(index);
+        SorcererEntity sorcerer = sorcererMap.get(index);
         if (sorcerer == null) {
-            sorcerer = new Sorcerer();
+            sorcerer = new SorcererEntity();
             sorcererMap.put(index, sorcerer);
         }
         
@@ -167,13 +164,13 @@ public class LegacyTxtParserStrategy implements ParserStrategy {
         }
     }
     
-    private void processTechniqueKey(String key, String value, Map<Integer, Technique> techniqueMap) {
+    private void processTechniqueKey(String key, String value, Map<Integer, TechniqueEntity> techniqueMap) {
         int index = extractIndex(key);
         if (index == -1) return;
         
-        Technique technique = techniqueMap.get(index);
+        TechniqueEntity technique = techniqueMap.get(index);
         if (technique == null) {
-            technique = new Technique();
+            technique = new TechniqueEntity();
             techniqueMap.put(index, technique);
         }
         

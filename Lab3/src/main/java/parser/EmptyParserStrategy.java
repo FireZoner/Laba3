@@ -5,13 +5,8 @@
 
 package parser;
 
-import entities.enums.TimelineEventType;
-import entities.enums.ThreatLevel;
-import entities.enums.BehaviorType;
-import entities.enums.Outcome;
-import entities.enums.Rank;
-import entities.enums.TechniqueType;
-import model.*;
+import entities.enums.*;
+import entities.*;
 import builders.MissionBuilder;
 import java.io.*;
 import java.time.LocalDateTime;
@@ -50,7 +45,7 @@ public class EmptyParserStrategy implements ParserStrategy {
     }
     
     @Override
-    public Mission parse(File file, MissionBuilder builder) throws IOException {
+    public MissionEntity parse(File file, MissionBuilder builder) throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             
@@ -100,7 +95,7 @@ public class EmptyParserStrategy implements ParserStrategy {
                     
                     case "TIMELINE_EVENT" -> {
                         if (parts.length >= 4) {
-                            OperationTimeline event = new OperationTimeline();
+                            OperationTimelineEntity event = new OperationTimelineEntity();
                             try {
                                 event.setTimestamp(LocalDateTime.parse(parts[1]));
                             } catch (Exception e) {
@@ -114,9 +109,9 @@ public class EmptyParserStrategy implements ParserStrategy {
                     
                     case "ENEMY_ACTION" -> {
                         if (parts.length >= 3) {
-                            EnemyActivity activity = builder.build().getEnemyActivity();
+                            EnemyActivityEntity activity = builder.build().getEnemyActivity();
                             if (activity == null) {
-                                activity = new EnemyActivity();
+                                activity = new EnemyActivityEntity();
                             }
                             activity.setBehaviorType(BehaviorType.parse(parts[1]));
                             if (parts.length >= 3 && parts[2] != null && !parts[2].isEmpty()) {
@@ -128,7 +123,7 @@ public class EmptyParserStrategy implements ParserStrategy {
                     
                     case "CIVILIAN_IMPACT" -> {
                         if (parts.length >= 2) {
-                            CivilianImpact impact = new CivilianImpact();
+                            CivilianImpactEntity impact = new CivilianImpactEntity();
                             for (int i = 1; i < parts.length; i++) {
                                 String[] kv = parts[i].split("=");
                                 if (kv.length == 2) {
