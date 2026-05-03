@@ -7,6 +7,7 @@ package main.controller;
 import dto.*;
 import entities.MissionEntity;
 import main.service.*;
+import report.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -71,6 +72,19 @@ public class MissionController {
                 .status(HttpStatus.BAD_REQUEST)
                 .body("Error parsing file: " + e.getMessage());
         }
+    }
+    
+    @PostMapping("/{missionId}/report")
+    public ResponseEntity<String> getMissionReport(
+            @PathVariable String missionId,
+            @RequestBody ReportRequest request) {
+
+        return missionService.findById(missionId)
+            .map(mission -> {
+                String report = ReportFactory.generateReport(mission, request.getType());
+                return ResponseEntity.ok(report);
+            })
+            .orElse(ResponseEntity.notFound().build());
     }
     
     @DeleteMapping("/{missionId}")
