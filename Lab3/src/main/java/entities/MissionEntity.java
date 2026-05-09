@@ -226,6 +226,7 @@ public class MissionEntity {
     }
 
     public void addTimelineEvent(OperationTimelineEntity event) {
+        event.setMission(this);
         this.operationTimeline.add(event);
     }
 

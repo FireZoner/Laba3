@@ -68,17 +68,34 @@ public class RiskReport implements MissionReport {
         sb.append("───────────────────────────────────────────────────────────────\n");
         if (mission.getEnemyActivity() != null) {
             EnemyActivityEntity ea = mission.getEnemyActivity();
+            boolean hasData = false;
+
             if (ea.getBehaviorType() != null) {
                 sb.append(String.format("  Behavior Type: %s\n", ea.getBehaviorType().name()));
+                hasData = true;
             }
             if (ea.getMobility() != null) {
                 sb.append(String.format("  Mobility: %s\n", ea.getMobility().name()));
+                hasData = true;
+            }
+            if (ea.getEscalationRisk() != null) {
+                sb.append(String.format("  Escalation Risk: %s\n", ea.getEscalationRisk().name()));
+                hasData = true;
+            }
+            if (ea.getTargetPriority() != null) {
+                sb.append(String.format("  Target Priority: %s\n", ea.getTargetPriority()));
+                hasData = true;
             }
             if (!ea.getAttackPatterns().isEmpty()) {
                 sb.append("  Attack Patterns:\n");
                 for (String pattern : ea.getAttackPatterns()) {
                     sb.append(String.format("    - %s\n", pattern));
                 }
+                hasData = true;
+            }
+
+            if (!hasData) {
+                sb.append("  Enemy Behavior: Not specified\n");
             }
         } else {
             sb.append("  Enemy Behavior: Not specified\n");

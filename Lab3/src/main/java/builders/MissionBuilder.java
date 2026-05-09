@@ -140,9 +140,9 @@ public class MissionBuilder {
     
     public MissionEntity build() {
         for (TechniqueEntity technique : mission.getTechniques()) {
-            if (technique.getOwnerName() != null && !technique.getOwnerName().isEmpty()) {
+            if (technique.getOwner() == null && technique.getOwnerName() != null) {
                 for (SorcererEntity sorcerer : mission.getSorcerers()) {
-                    if (sorcerer.getName().equals(technique.getOwnerName())) {
+                    if (sorcerer.getName() != null && sorcerer.getName().equals(technique.getOwnerName())) {
                         technique.setOwner(sorcerer);
                         break;
                     }

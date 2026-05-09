@@ -93,15 +93,20 @@ public class StatisticsReport implements MissionReport {
                 nonZeroDamageCount, mission.getTechniques().size()));
             sb.append(String.format("  Mission Damage:    %d\n", mission.getDamageCost()));
             
-            if (mission.getDamageCost() > 0) {
-                double damageRatio = (double) totalTechDamage / mission.getDamageCost() * 100;
-                sb.append(String.format("  Tech Damage / Mission Damage: %.1f%%\n", damageRatio));
-            } else if (totalTechDamage > 0) {
-                sb.append("  Tech Damage / Mission Damage: N/A (Mission Damage = 0)\n");
-            } else {
-                sb.append("  Tech Damage / Mission Damage: N/A\n");
-            }
-            sb.append("\n");
+            long actualMissionDamage = mission.getDamageCost();
+            if (actualMissionDamage == 0 && mission.getEconomicAssessment() != null) {
+            actualMissionDamage = mission.getEconomicAssessment().getTotalDamageCost();
+        }
+
+        sb.append(String.format("  Mission Damage:    %d\n", actualMissionDamage));
+
+        if (actualMissionDamage > 0) {
+            double damageRatio = (double) totalTechDamage / actualMissionDamage * 100;
+            sb.append(String.format("  Tech Damage / Mission Damage: %.1f%%\n", damageRatio));
+        } else if (totalTechDamage > 0) {
+            sb.append("  Tech Damage / Mission Damage: N/A (Mission Damage = 0)\n");
+        }
+        sb.append("\n");
         }
         
         if (!mission.getTechniques().isEmpty()) {
@@ -110,11 +115,19 @@ public class StatisticsReport implements MissionReport {
             
             Map<String, Long> damageBySorcerer = new HashMap<>();
             for (TechniqueEntity t : mission.getTechniques()) {
-                if (t.getOwner() != null && t.getOwner().getName() != null && t.getDamage() > 0) {
-                    damageBySorcerer.merge(t.getOwner().getName(), t.getDamage(), Long::sum);
+                String ownerName = null;
+                if (t.getOwner() != null && t.getOwner().getName() != null) {
+                    ownerName = t.getOwner().getName();
+                } 
+                else if (t.getOwnerName() != null && !t.getOwnerName().isEmpty()) {
+                    ownerName = t.getOwnerName();
+                }
+
+                if (ownerName != null && t.getDamage() > 0) {
+                    damageBySorcerer.merge(ownerName, t.getDamage(), Long::sum);
                 }
             }
-            
+
             if (damageBySorcerer.isEmpty()) {
                 sb.append("  No damage data with valid owner\n");
             } else {
@@ -122,7 +135,7 @@ public class StatisticsReport implements MissionReport {
                 for (Map.Entry<String, Long> entry : damageBySorcerer.entrySet().stream()
                         .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
                         .collect(Collectors.toList())) {
-                    
+
                     double percentage = totalDamage > 0 ? 
                         (double) entry.getValue() / totalDamage * 100 : 0;
                     sb.append(String.format("  %-20s %12d (%.1f%% of tech damage)\n", 
