@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Архив миссий - Токийский магический колледж</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📜 Архив миссий</h1>
+            <p>Токийский магический колледж</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="upload">📤 Загрузить миссию</button>
+            <button class="tab-btn" data-tab="list">📋 Список миссий</button>
+            <button class="tab-btn" data-tab="report">📄 Отчёт по миссии</button>
+        </div>
+
+        <!-- Вкладка 1: Загрузка -->
+        <div id="upload-tab" class="tab-content active">
+            <h2>Загрузка новой миссии</h2>
+            <div class="upload-area" id="upload-area">
+                <p>📁 Перетащите файл сюда или нажмите для выбора</p>
+                <input type="file" id="file-input" accept=".json,.xml,.yaml,.yml,.txt" style="display: none;">
+            </div>
+            <div class="status" id="upload-status"></div>
+        </div>
+
+        <!-- Вкладка 2: Список миссий -->
+        <div id="list-tab" class="tab-content">
+            <h2>Список миссий</h2>
+            <button id="refresh-list" class="btn-primary">🔄 Обновить список</button>
+            <div id="missions-list" class="missions-list"></div>
+        </div>
+
+        <!-- Вкладка 3: Отчёт по миссии -->
+        <div id="report-tab" class="tab-content">
+            <h2>Генерация отчёта</h2>
+            <div class="form-group">
+                <label>ID миссии:</label>
+                <input type="text" id="report-mission-id" placeholder="Например: M-2024-017">
+            </div>
+            <div class="form-group">
+                <label>Тип отчёта:</label>
+                <select id="report-type">
+                    <option value="SUMMARY">📋 Краткий</option>
+                    <option value="DETAILED" selected>📖 Детализированный</option>
+                    <option value="RISK">⚠️ Риски</option>
+                    <option value="STATISTICS">📊 Статистика</option>
+                </select>
+            </div>
+            <button id="generate-report" class="btn-primary">📄 Сгенерировать отчёт</button>
+            <div class="report-output" id="report-output"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

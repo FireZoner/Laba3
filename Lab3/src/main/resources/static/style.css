@@ -1,0 +1,197 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    min-height: 100vh;
+    color: #eee;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    padding: 30px 0;
+    border-bottom: 2px solid #e94560;
+    margin-bottom: 30px;
+}
+
+header h1 {
+    font-size: 2.5em;
+    color: #e94560;
+}
+
+header p {
+    color: #aaa;
+}
+
+.tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.tab-btn {
+    padding: 12px 24px;
+    background: #2a2a4a;
+    border: none;
+    color: #eee;
+    cursor: pointer;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.3s;
+}
+
+.tab-btn:hover {
+    background: #3a3a6a;
+}
+
+.tab-btn.active {
+    background: #e94560;
+    color: white;
+}
+
+.tab-content {
+    display: none;
+    background: #2a2a4a;
+    border-radius: 12px;
+    padding: 30px;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+h2 {
+    margin-bottom: 20px;
+    color: #e94560;
+}
+
+.upload-area {
+    border: 3px dashed #3a3a6a;
+    border-radius: 12px;
+    padding: 60px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.upload-area:hover {
+    border-color: #e94560;
+    background: #3a3a6a;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    background: #1a1a2e;
+    border: 1px solid #3a3a6a;
+    border-radius: 6px;
+    color: #eee;
+    font-size: 14px;
+}
+
+.btn-primary {
+    background: #e94560;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s;
+}
+
+.btn-primary:hover {
+    background: #ff6b6b;
+    transform: translateY(-2px);
+}
+
+.missions-list {
+    margin-top: 20px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.mission-card {
+    background: #1a1a2e;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.mission-card:hover {
+    background: #3a3a6a;
+    transform: translateX(5px);
+}
+
+.mission-card h3 {
+    color: #e94560;
+    margin-bottom: 8px;
+}
+
+.mission-card p {
+    color: #aaa;
+    font-size: 14px;
+}
+
+.report-output {
+    margin-top: 20px;
+    background: #1a1a2e;
+    border-radius: 8px;
+    padding: 20px;
+    max-height: 500px;
+    overflow-y: auto;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    white-space: pre-wrap;
+}
+
+.status {
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 6px;
+}
+
+.status.success {
+    background: #2e7d32;
+}
+
+.status.error {
+    background: #c62828;
+}
+
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
