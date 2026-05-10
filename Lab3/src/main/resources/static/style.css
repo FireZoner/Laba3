@@ -12,7 +12,7 @@ body {
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
     padding: 20px;
 }
@@ -37,6 +37,7 @@ header p {
     display: flex;
     gap: 10px;
     margin-bottom: 30px;
+    flex-wrap: wrap;
 }
 
 .tab-btn {
@@ -52,6 +53,7 @@ header p {
 
 .tab-btn:hover {
     background: #3a3a6a;
+    transform: translateY(-2px);
 }
 
 .tab-btn.active {
@@ -73,6 +75,11 @@ header p {
 h2 {
     margin-bottom: 20px;
     color: #e94560;
+}
+
+h3 {
+    margin: 20px 0 15px 0;
+    color: #ddd;
 }
 
 .upload-area {
@@ -100,7 +107,8 @@ h2 {
 }
 
 .form-group input,
-.form-group select {
+.form-group select,
+.form-group textarea {
     width: 100%;
     padding: 12px;
     background: #1a1a2e;
@@ -108,6 +116,18 @@ h2 {
     border-radius: 6px;
     color: #eee;
     font-size: 14px;
+    font-family: inherit;
+}
+
+.form-group textarea {
+    resize: vertical;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #e94560;
 }
 
 .btn-primary {
@@ -123,6 +143,23 @@ h2 {
 
 .btn-primary:hover {
     background: #ff6b6b;
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: #3a3a6a;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s;
+    white-space: nowrap;
+}
+
+.btn-secondary:hover {
+    background: #4a4a7a;
     transform: translateY(-2px);
 }
 
@@ -149,11 +186,13 @@ h2 {
 .mission-card h3 {
     color: #e94560;
     margin-bottom: 8px;
+    margin-top: 0;
 }
 
 .mission-card p {
     color: #aaa;
     font-size: 14px;
+    margin: 5px 0;
 }
 
 .report-output {
@@ -176,10 +215,12 @@ h2 {
 
 .status.success {
     background: #2e7d32;
+    color: white;
 }
 
 .status.error {
     background: #c62828;
+    color: white;
 }
 
 .loading {
@@ -194,4 +235,12 @@ h2 {
 
 @keyframes spin {
     to { transform: rotate(360deg); }
+}
+
+.error {
+    color: #ff6b6b;
+}
+
+.success {
+    color: #6bff6b;
 }

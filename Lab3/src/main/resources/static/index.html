@@ -9,30 +9,32 @@
 <body>
     <div class="container">
         <header>
-            <h1>📜 Архив миссий</h1>
+            <h1>Архив миссий</h1>
             <p>Токийский магический колледж</p>
         </header>
 
         <div class="tabs">
             <button class="tab-btn active" data-tab="upload">📤 Загрузить миссию</button>
-            <button class="tab-btn" data-tab="list">📋 Список миссий</button>
-            <button class="tab-btn" data-tab="report">📄 Отчёт по миссии</button>
+            <button class="tab-btn" data-tab="list">Список миссий</button>
+            <button class="tab-btn" data-tab="report">Отчёт по миссии</button>
+            <button class="tab-btn" data-tab="update">Обновить миссию</button>
         </div>
 
         <!-- Вкладка 1: Загрузка -->
         <div id="upload-tab" class="tab-content active">
             <h2>Загрузка новой миссии</h2>
             <div class="upload-area" id="upload-area">
-                <p>📁 Перетащите файл сюда или нажмите для выбора</p>
+                <p>Перетащите файл сюда или нажмите для выбора</p>
+                <p style="font-size: 12px; margin-top: 10px; color: #aaa;">Поддерживаемые форматы: JSON, YAML, XML, TXT (все виды)</p>
                 <input type="file" id="file-input" accept=".json,.xml,.yaml,.yml,.txt" style="display: none;">
             </div>
-            <div class="status" id="upload-status"></div>
+            <div id="upload-status" class="status"></div>
         </div>
 
         <!-- Вкладка 2: Список миссий -->
         <div id="list-tab" class="tab-content">
             <h2>Список миссий</h2>
-            <button id="refresh-list" class="btn-primary">🔄 Обновить список</button>
+            <button id="refresh-list" class="btn-primary">Обновить список</button>
             <div id="missions-list" class="missions-list"></div>
         </div>
 
@@ -46,14 +48,68 @@
             <div class="form-group">
                 <label>Тип отчёта:</label>
                 <select id="report-type">
-                    <option value="SUMMARY">📋 Краткий</option>
-                    <option value="DETAILED" selected>📖 Детализированный</option>
-                    <option value="RISK">⚠️ Риски</option>
-                    <option value="STATISTICS">📊 Статистика</option>
+                    <option value="SUMMARY">Краткий резюме (SUMMARY)</option>
+                    <option value="DETAILED" selected>📖 Детализированный (DETAILED)</option>
+                    <option value="RISK">Оценка рисков (RISK)</option>
+                    <option value="STATISTICS">Статистический (STATISTICS)</option>
                 </select>
             </div>
-            <button id="generate-report" class="btn-primary">📄 Сгенерировать отчёт</button>
-            <div class="report-output" id="report-output"></div>
+            <button id="generate-report" class="btn-primary">Сгенерировать отчёт</button>
+            <div id="report-output" class="report-output"></div>
+        </div>
+
+        <!-- Вкладка 4: Обновление миссии -->
+        <div id="update-tab" class="tab-content">
+            <h2>Частичное обновление миссии</h2>
+            <div class="form-group">
+                <label>ID миссии:</label>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="update-mission-id" placeholder="Например: M-2024-017" style="flex: 1;">
+                    <button id="load-mission-btn" class="btn-secondary">Загрузить данные</button>
+                </div>
+            </div>
+            
+            <div id="update-form" style="display: none;">
+                <h3>Текущие данные миссии</h3>
+                
+                <div class="form-group">
+                    <label>Локация:</label>
+                    <input type="text" id="update-location" placeholder="Новая локация">
+                </div>
+                
+                <div class="form-group">
+                    <label>Результат:</label>
+                    <select id="update-outcome">
+                        <option value="">— не менять —</option>
+                        <option value="SUCCESS">SUCCESS</option>
+                        <option value="PARTIAL_SUCCESS">PARTIAL_SUCCESS</option>
+                        <option value="FAILURE">FAILURE</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Ущерб:</label>
+                    <input type="number" id="update-damageCost" placeholder="Новый ущерб">
+                </div>
+                
+                <div class="form-group">
+                    <label>Комментарий:</label>
+                    <textarea id="update-comment" rows="3" placeholder="Новый комментарий"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Добавить теги (через запятую):</label>
+                    <input type="text" id="update-add-tags" placeholder="тег1, тег2, тег3">
+                </div>
+                
+                <div class="form-group">
+                    <label>Удалить теги (через запятую):</label>
+                    <input type="text" id="update-remove-tags" placeholder="тег1, тег2">
+                </div>
+                
+                <button id="update-mission-btn" class="btn-primary">Сохранить изменения</button>
+                <div id="update-status" class="status"></div>
+            </div>
         </div>
     </div>
 

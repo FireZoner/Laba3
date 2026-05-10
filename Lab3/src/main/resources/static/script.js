@@ -1,6 +1,6 @@
 const API_BASE = 'http://localhost:8080/api/missions';
 
-// Вкладки
+// ===== ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК =====
 document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         const tabId = btn.dataset.tab;
@@ -11,7 +11,7 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     });
 });
 
-// Загрузка файла
+// ===== ЗАГРУЗКА ФАЙЛА =====
 const uploadArea = document.getElementById('upload-area');
 const fileInput = document.getElementById('file-input');
 
@@ -52,6 +52,7 @@ async function uploadFile(file) {
             const data = await response.json();
             status.innerHTML = `✅ Миссия ${data.missionId} успешно загружена!`;
             status.className = 'status success';
+            loadMissions();
         } else {
             const error = await response.text();
             status.innerHTML = `❌ Ошибка: ${error}`;
@@ -63,7 +64,7 @@ async function uploadFile(file) {
     }
 }
 
-// Список миссий
+// ===== СПИСОК МИССИЙ =====
 document.getElementById('refresh-list').addEventListener('click', loadMissions);
 
 async function loadMissions() {
@@ -72,6 +73,8 @@ async function loadMissions() {
 
     try {
         const response = await fetch(API_BASE);
+        if (!response.ok) throw new Error('Ошибка загрузки');
+        
         const missions = await response.json();
 
         if (missions.length === 0) {
@@ -81,14 +84,14 @@ async function loadMissions() {
 
         container.innerHTML = missions.map(mission => `
             <div class="mission-card" onclick="fillMissionId('${mission.missionId}')">
-                <h3>${mission.missionId}</h3>
-                <p>📅 ${mission.date} | 📍 ${mission.location}</p>
-                <p>🏆 ${mission.outcome} | 💰 ${mission.damageCost.toLocaleString()} ¥</p>
+                <h3>${escapeHtml(mission.missionId)}</h3>
+                <p>📅 ${escapeHtml(mission.date)} | 📍 ${escapeHtml(mission.location)}</p>
+                <p>🏆 ${escapeHtml(mission.outcome)} | 💰 ${mission.damageCost.toLocaleString()} ¥</p>
                 <p>🧙 ${mission.sorcerersCount} магов | ⚡ ${mission.techniquesCount} техник</p>
             </div>
         `).join('');
     } catch (error) {
-        container.innerHTML = `<p>❌ Ошибка: ${error.message}</p>`;
+        container.innerHTML = `<p class="error">❌ Ошибка: ${error.message}</p>`;
     }
 }
 
@@ -97,7 +100,7 @@ function fillMissionId(missionId) {
     document.querySelector('.tab-btn[data-tab="report"]').click();
 }
 
-// Генерация отчёта
+// ===== ГЕНЕРАЦИЯ ОТЧЁТА =====
 document.getElementById('generate-report').addEventListener('click', generateReport);
 
 async function generateReport() {
@@ -119,17 +122,129 @@ async function generateReport() {
             body: JSON.stringify({ type: type })
         });
 
-        if (response.ok) {
-            const report = await response.text();
-            output.innerHTML = `<pre>${escapeHtml(report)}</pre>`;
-        } else {
-            output.innerHTML = `<p class="error">❌ Миссия не найдена</p>`;
+        if (!response.ok) {
+            if (response.status === 404) {
+                output.innerHTML = '<p class="error">❌ Миссия не найдена</p>';
+            } else {
+                output.innerHTML = '<p class="error">❌ Ошибка генерации отчёта</p>';
+            }
+            return;
         }
+
+        const report = await response.text();
+        output.innerHTML = `<pre>${escapeHtml(report)}</pre>`;
     } catch (error) {
         output.innerHTML = `<p class="error">❌ Ошибка: ${error.message}</p>`;
     }
 }
 
+// ===== ОБНОВЛЕНИЕ МИССИИ =====
+document.getElementById('load-mission-btn').addEventListener('click', loadMissionForUpdate);
+
+async function loadMissionForUpdate() {
+    const missionId = document.getElementById('update-mission-id').value.trim();
+    const updateForm = document.getElementById('update-form');
+    const status = document.getElementById('update-status');
+    
+    if (!missionId) {
+        status.innerHTML = '<span class="error">❌ Введите ID миссии</span>';
+        return;
+    }
+    
+    status.innerHTML = '<div class="loading"></div> Загрузка...';
+    
+    try {
+        const response = await fetch(`${API_BASE}/${missionId}`);
+        
+        if (!response.ok) {
+            throw new Error('Миссия не найдена');
+        }
+        
+        const mission = await response.json();
+        
+        document.getElementById('update-location').value = mission.location || '';
+        document.getElementById('update-outcome').value = mission.outcome || '';
+        document.getElementById('update-damageCost').value = mission.damageCost || '';
+        document.getElementById('update-comment').value = mission.comment || '';
+        document.getElementById('update-add-tags').value = '';
+        document.getElementById('update-remove-tags').value = '';
+        
+        updateForm.style.display = 'block';
+        status.innerHTML = '<span class="success">✅ Данные загружены. Измените нужные поля и нажмите "Сохранить".</span>';
+        
+    } catch (error) {
+        updateForm.style.display = 'none';
+        status.innerHTML = `<span class="error">❌ ${error.message}</span>`;
+    }
+}
+
+document.getElementById('update-mission-btn').addEventListener('click', updateMission);
+
+async function updateMission() {
+    const missionId = document.getElementById('update-mission-id').value.trim();
+    const status = document.getElementById('update-status');
+    
+    const updates = {};
+    
+    const location = document.getElementById('update-location').value.trim();
+    if (location) updates.location = location;
+    
+    const outcome = document.getElementById('update-outcome').value;
+    if (outcome) updates.outcome = outcome;
+    
+    const damageCost = document.getElementById('update-damageCost').value;
+    if (damageCost) updates.damageCost = parseInt(damageCost);
+    
+    const comment = document.getElementById('update-comment').value.trim();
+    if (comment) updates.comment = comment;
+    
+    const addTags = document.getElementById('update-add-tags').value.trim();
+    if (addTags) {
+        updates.addMissionTags = addTags.split(',').map(t => t.trim()).filter(t => t);
+    }
+    
+    const removeTags = document.getElementById('update-remove-tags').value.trim();
+    if (removeTags) {
+        updates.removeMissionTags = removeTags.split(',').map(t => t.trim()).filter(t => t);
+    }
+    
+    if (Object.keys(updates).length === 0) {
+        status.innerHTML = '<span class="error">❌ Нет данных для обновления</span>';
+        return;
+    }
+    
+    status.innerHTML = '<div class="loading"></div> Отправка...';
+    
+    try {
+        const response = await fetch(`${API_BASE}/${missionId}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updates)
+        });
+        
+        if (!response.ok) {
+            const error = await response.text();
+            throw new Error(error);
+        }
+        
+        const result = await response.json();
+        status.innerHTML = '<span class="success">✅ Миссия обновлена успешно!</span>';
+        
+        document.getElementById('update-location').value = '';
+        document.getElementById('update-outcome').value = '';
+        document.getElementById('update-damageCost').value = '';
+        document.getElementById('update-comment').value = '';
+        document.getElementById('update-add-tags').value = '';
+        document.getElementById('update-remove-tags').value = '';
+        
+        loadMissions();
+        
+    } catch (error) {
+        status.innerHTML = `<span class="error">❌ ${error.message}</span>`;
+    }
+}
+
+// ===== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ =====
 function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
