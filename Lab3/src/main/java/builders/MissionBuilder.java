@@ -79,6 +79,7 @@ public class MissionBuilder {
     
     public MissionBuilder addTechnique(String name, TechniqueType type, String ownerName, long damage) {
         TechniqueEntity technique = new TechniqueEntity(name, type, damage);
+        technique.setOwnerName(ownerName);
         mission.addTechnique(technique);
         return this;
     }
