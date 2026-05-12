@@ -50,16 +50,16 @@ async function uploadFile(file) {
 
         if (response.ok) {
             const data = await response.json();
-            status.innerHTML = `✅ Миссия ${data.missionId} успешно загружена!`;
+            status.innerHTML = ` Миссия ${data.missionId} успешно загружена!`;
             status.className = 'status success';
             loadMissions();
         } else {
             const error = await response.text();
-            status.innerHTML = `❌ Ошибка: ${error}`;
+            status.innerHTML = ` Ошибка: ${error}`;
             status.className = 'status error';
         }
     } catch (error) {
-        status.innerHTML = `❌ Ошибка: ${error.message}`;
+        status.innerHTML = ` Ошибка: ${error.message}`;
         status.className = 'status error';
     }
 }
@@ -78,26 +78,55 @@ async function loadMissions() {
         const missions = await response.json();
 
         if (missions.length === 0) {
-            container.innerHTML = '<p>📭 Нет загруженных миссий</p>';
+            container.innerHTML = '<p> Нет загруженных миссий</p>';
             return;
         }
 
         container.innerHTML = missions.map(mission => `
-            <div class="mission-card" onclick="fillMissionId('${mission.missionId}')">
-                <h3>${escapeHtml(mission.missionId)}</h3>
-                <p>📅 ${escapeHtml(mission.date)} | 📍 ${escapeHtml(mission.location)}</p>
-                <p>🏆 ${escapeHtml(mission.outcome)} | 💰 ${mission.damageCost.toLocaleString()} ¥</p>
-                <p>🧙 ${mission.sorcerersCount} магов | ⚡ ${mission.techniquesCount} техник</p>
+            <div class="mission-card" data-id="${mission.missionId}">
+                <div class="mission-info" onclick="fillMissionId('${mission.missionId}')">
+                    <h3>${escapeHtml(mission.missionId)}</h3>
+                    <p> ${escapeHtml(mission.date)} | ${escapeHtml(mission.location)}</p>
+                    <p> ${escapeHtml(mission.outcome)} | ${mission.damageCost.toLocaleString()} ¥</p>
+                    <p>? ${mission.sorcerersCount} магов | ${mission.techniquesCount} техник</p>
+                </div>
+                <button class="delete-btn" onclick="deleteMission('${mission.missionId}', event)">🗑️ Удалить</button>
             </div>
         `).join('');
     } catch (error) {
-        container.innerHTML = `<p class="error">❌ Ошибка: ${error.message}</p>`;
+        container.innerHTML = `<p class="error"> Ошибка: ${error.message}</p>`;
     }
 }
 
 function fillMissionId(missionId) {
     document.getElementById('report-mission-id').value = missionId;
     document.querySelector('.tab-btn[data-tab="report"]').click();
+}
+
+// ===== УДАЛЕНИЕ МИССИИ =====
+async function deleteMission(missionId, event) {
+    event.stopPropagation();
+    
+    if (!confirm(`Удалить миссию ${missionId}? Это действие нельзя отменить.`)) {
+        return;
+    }
+    
+    try {
+        const response = await fetch(`${API_BASE}/${missionId}`, {
+            method: 'DELETE'
+        });
+        
+        if (response.ok) {
+            await loadMissions();
+            showToast(` Миссия ${missionId} успешно удалена`, 'success');
+        } else if (response.status === 404) {
+            showToast(` Миссия ${missionId} не найдена`, 'error');
+        } else {
+            showToast(` Ошибка при удалении миссии ${missionId}`, 'error');
+        }
+    } catch (error) {
+        showToast(` Ошибка: ${error.message}`, 'error');
+    }
 }
 
 // ===== ГЕНЕРАЦИЯ ОТЧЁТА =====
@@ -124,9 +153,9 @@ async function generateReport() {
 
         if (!response.ok) {
             if (response.status === 404) {
-                output.innerHTML = '<p class="error">❌ Миссия не найдена</p>';
+                output.innerHTML = '<p class="error"> Миссия не найдена</p>';
             } else {
-                output.innerHTML = '<p class="error">❌ Ошибка генерации отчёта</p>';
+                output.innerHTML = '<p class="error"> Ошибка генерации отчёта</p>';
             }
             return;
         }
@@ -134,7 +163,7 @@ async function generateReport() {
         const report = await response.text();
         output.innerHTML = `<pre>${escapeHtml(report)}</pre>`;
     } catch (error) {
-        output.innerHTML = `<p class="error">❌ Ошибка: ${error.message}</p>`;
+        output.innerHTML = `<p class="error"> Ошибка: ${error.message}</p>`;
     }
 }
 
@@ -147,7 +176,7 @@ async function loadMissionForUpdate() {
     const status = document.getElementById('update-status');
     
     if (!missionId) {
-        status.innerHTML = '<span class="error">❌ Введите ID миссии</span>';
+        status.innerHTML = '<span class="error"> Введите ID миссии</span>';
         return;
     }
     
@@ -170,11 +199,11 @@ async function loadMissionForUpdate() {
         document.getElementById('update-remove-tags').value = '';
         
         updateForm.style.display = 'block';
-        status.innerHTML = '<span class="success">✅ Данные загружены. Измените нужные поля и нажмите "Сохранить".</span>';
+        status.innerHTML = '<span class="success"> Данные загружены. Измените нужные поля и нажмите "Сохранить".</span>';
         
     } catch (error) {
         updateForm.style.display = 'none';
-        status.innerHTML = `<span class="error">❌ ${error.message}</span>`;
+        status.innerHTML = `<span class="error"> ${error.message}</span>`;
     }
 }
 
@@ -209,7 +238,7 @@ async function updateMission() {
     }
     
     if (Object.keys(updates).length === 0) {
-        status.innerHTML = '<span class="error">❌ Нет данных для обновления</span>';
+        status.innerHTML = '<span class="error"> Нет данных для обновления</span>';
         return;
     }
     
@@ -228,7 +257,7 @@ async function updateMission() {
         }
         
         const result = await response.json();
-        status.innerHTML = '<span class="success">✅ Миссия обновлена успешно!</span>';
+        status.innerHTML = '<span class="success"> Миссия обновлена успешно!</span>';
         
         document.getElementById('update-location').value = '';
         document.getElementById('update-outcome').value = '';
@@ -240,8 +269,27 @@ async function updateMission() {
         loadMissions();
         
     } catch (error) {
-        status.innerHTML = `<span class="error">❌ ${error.message}</span>`;
+        status.innerHTML = `<span class="error"> ${error.message}</span>`;
     }
+}
+
+// ===== ВСПЛЫВАЮЩЕЕ СООБЩЕНИЕ =====
+function showToast(message, type = 'success') {
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.classList.add('show');
+    }, 10);
+    
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => {
+            toast.remove();
+        }, 300);
+    }, 3000);
 }
 
 // ===== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ =====
